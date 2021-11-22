@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<title>図形の求積プログラム</title>
+<style>
+* {
+	margin: 0;
+	padding: 0;
+	}
+#pagebody{
+	width:1000px;
+	margin:0 auto;
+	padding:20px;
+	background-color:rgb(235, 230, 250);
+	}
+p#logo{
+	font-size:30px;
+	height:60px;
+	padding:0 auto;
+	background-color:rgba(255,255,255,0.8);
+	text-align:center;
+	}
+label{
+	display:block;
+	margin:10px;
+	}
+#form{
+	height:1000px;
+	background-color:rgba(255,255,255,0.6);
+	margin:0 0;
+	padding:0 200px;
+	}
+input{
+	margin:5px 10px;
+	height:20px;
+	width:70px;
+	}
+#calculate{
+	display:block;
+	margin:10px auto;
+	}
+</style>
+</head>
+<body>
+<div id="pagebody">
+	<p id="logo">有限頂点図形の面積を求めるやつ</p>
+	<div id="form">
+		<!--<label>分割点の数<input type="number" id="Nb"></label>-->
+		<label>座標の入力 X[mm]:<input type="number" id="xin"></label>
+		<label>座標の入力 Y[mm]:<input type="number" id="yin"><input type="button" id="Nb" value="座標入力" onclick="inputCoordinate()"></label>
+		<button id="calculate" onclick="calculate()">Calculate!</button>
+		<p id="inputted">入力済み座標一覧[mm]</p>
+		<p id="hide"></p>
+	</div>
+</div>
+<script>
+var Nb,S,Si,PL,x0,x1,x2,xG,xi,y0,y1,y2,yG,yi;
+Nb=S=Si=PL=x0=x1=x2=xG=xi=y0=y1=y2=yG=yi=0;
+
+const xin=document.getElementById('xin');
+const yin=document.getElementById('yin');
+const hide=document.getElementById('hide');
+
+function inputCoordinate(){
+	if(xin.value!=''&&yin.value!=''){
+		if(Nb==0){
+			x0=xin.value;
+			y0=yin.value;
+			x1=x0;
+			y1=y0;
+			hide.insertAdjacentHTML('beforebegin','<p>No.'+Nb+' x:'+x0+', y:'+y0+'</p>');
+			hide.insertAdjacentHTML('beforebegin','<p>'+Nb+' '+S+' '+Si+' '+PL+' '+x0+' '+x1+' '+x2+' '+xG+' '+xi+' '+y0+' '+y1+' '+y2+' '+yG+' '+yi+'</p>')
+		} else{
+			x2=xin.value;
+			y2=yin.value;
+			Si=(x1*y2-x2*y1)*0.5;
+			S+=Si;
+			xi=(x1+x2)/3;
+			xG+=xi*Si;
+			yi=(y1+y2)/3;
+			yG+=yi*Si;
+			PL+=Math.sqrt((x2-x1)**2+(y2-y1)**2);
+			hide.insertAdjacentHTML('beforebegin','<p>No.'+Nb+' x:'+x2+', y:'+y2+'</p>');
+			hide.insertAdjacentHTML('beforebegin','<p>'+Nb+' '+S+' '+Si+' '+PL+' '+x0+' '+x1+' '+x2+' '+xG+' '+xi+' '+y0+' '+y1+' '+y2+' '+yG+' '+yi+'</p>')
+		}
+	document.getElementById('xin').value=null;
+	document.getElementById('yin').value=null;
+	
+	x1=x2;y1=y2;
+	
+	Nb+=1;
+	}
+}
+
+function calculate(){
+	if(Nb>2){
+		x2=x0;y2=y0;
+		Si=(x1*y2-x2*y1)*0.5;
+		S+=Si;
+		xi=(x1+x2)/3;
+		xG=xG+xi*Si;
+		yi=(y1+y2)/3;
+		yG=yG+yi*Si;
+		PL+=Math.sqrt((x2-x1)**2+(y2-y1)**2);
+		xG=xG/S;
+		yG=yG/S;
+		S=Math.abs(S);
+		
+		document.getElementById('hide').insertAdjacentHTML('beforebegin','<p>面積:'+S+'　重心 x:'+xG+' y:'+yG+'　周囲長さ: '+PL+'</p>');
+	}
+}
+</script>
+</body>
+</html>
