@@ -1,2 +1,0 @@
-# calculate-figure-area
-sample
